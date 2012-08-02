@@ -1,0 +1,125 @@
+#!/bin/bash
+
+unset PATH
+
+CUT=/bin/cut
+DATE=/bin/date
+ECHO=/bin/echo
+GREP=/bin/grep
+RM=/bin/rm
+SKILLEDWAFFLE=./skilledwaffle
+WC=/usr/bin/wc
+
+if [ ! "HELP" == $(${SKILLEDWAFFLE} --help) ]
+then
+    exit 64
+fi
+
+if [ ! "VERSION" == $(${SKILLEDWAFFLE} --version) ]
+then
+    exit 65
+fi
+
+${SKILLEDWAFFLE} /bin/echo Hello World
+if [ ! "/bin/echo Hello World" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^[^#]')" ]
+then
+    exit 66
+fi
+if [ ! "1" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^[^#]' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 67
+fi
+if [ ! "# BEGIN OUTPUT" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# BEGIN')" ]
+then
+    exit 68
+fi
+if [ ! "2" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# BEGIN' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 69
+fi
+if [ ! "# OUTPUT: Hello World" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# OUTPUT')" ]
+then
+    exit 70
+fi
+if [ ! "3" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# OUTPUT' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 71
+fi
+if [ ! "# END OUTPUT" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# END')" ]
+then
+    exit 72
+fi
+if [ ! "4" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# END' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 73
+fi
+if [ ! "#" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 1)" ]
+then
+    exit 74
+fi
+if [ ! "DATE:" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 2)" ]
+then
+    exit 75
+fi
+if [ ! "$(${DATE} +%A,)" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 3)" ]
+then
+    exit 76
+fi
+if [ ! "$(${DATE} +%d)" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 4)" ]
+then
+    exit 77
+fi
+if [ ! "$(${DATE} +%B)" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 5)" ]
+then
+    exit 78
+fi
+if [ ! "$(${DATE} +%Y)" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 6)" ]
+then
+    exit 79
+fi
+if [ ! "$(${DATE} +%H:%M:%S)" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 7)" ]
+then
+    exit 80
+fi
+if [[ ! "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DATE' | ${CUT} --delimiter ' ' --fields 7)" =~ [0-9]+ ]]
+then
+    exit 81
+fi
+if [ ! "4" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# END' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 82
+fi
+if [ ! "#" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DURATION' | ${CUT} --delimiter ' ' --fields 1)" ]
+then
+    exit 83
+fi
+if [ ! "DURATION:" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DURATION' | ${CUT} --delimiter ' ' --fields 2)" ]
+then
+    exit 84
+fi
+if [[ ! "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# DURATION' | ${CUT} --delimiter ' ' --fields 3)" =~ [0-9]+ ]]
+then
+    exit 85
+fi
+if [ ! "6" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# DURATION' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 86
+fi
+if [ ! "# EXIT CODE: 0" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} '^# EXIT')" ]
+then
+    exit 87
+fi
+if [ ! "7" == "$(${SKILLEDWAFFLE} /bin/echo Hello World | ${GREP} --line-number '^# EXIT' | ${CUT} --delimiter ':' --fields 1)" ]
+then
+    exit 88
+fi
+
+WORK_DIR=$(${MKTEMP} -d)
+${SKILLEDWAFFLE} ${RM} ${WORK_DIR}/does_not_exist
+if [ 0 == $? ]
+then
+    ${RM} --recursive --force ${WORK_DIR}
+    exit 89
+fi
+${RM} --recursive --force ${WORK_DIR}
+

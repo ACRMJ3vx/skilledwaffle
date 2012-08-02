@@ -1,0 +1,40 @@
+#!/bin/sh
+
+unset PATH
+
+function skilledwaffle
+{
+    local DATE=/bin/date
+    local ECHO=/bin/echo
+    local MKTEMP=/bin/mktemp
+    local RM=/bin/rm
+    local SED=/bin/sed
+
+    if [ 1 -eq $# ] && [ "--help" == $1 ]
+    then
+	${ECHO} HELP
+	exit 0
+    elif [ 1 -eq $# ] && [ "--version" == $1 ]
+    then
+	${ECHO} VERSION
+	exit 0
+    else
+	local OUT=$(${MKTEMP})
+	local BEFORE=$(${DATE} +%s%N)
+	$@ > ${OUT} 2>&1
+	local EXIT_CODE=$?
+	local AFTER=$(${DATE} +%s%N)
+	${ECHO} $@
+	${ECHO} "# BEGIN OUTPUT"
+	${SED} -e "s!^!# OUTPUT: !" ${OUT}
+	${RM} --force ${OUT}
+	${ECHO} "# END OUTPUT"
+	${DATE} +"# DATE: %A, %d %B %Y %H:%M:%S %N"
+	${ECHO} -e "# DURATION: $((${AFTER}-${BEFORE}))"
+	${ECHO} -e "# EXIT CODE: ${EXIT_CODE}"
+ 	exit ${EXIT_CODE}
+    fi
+}
+
+skilledwaffle $@
+
