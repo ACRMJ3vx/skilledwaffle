@@ -9,8 +9,10 @@ LICENSE = GNU General Public License
 GROUP = Emory Hughes Merryman, III
 URL = https://github.com/ACRMJ3vx/skilledwaffle
 
+CAT=/bin/cat
 CP=/bin/cp
 ECHO=/bin/echo
+GIT=/usr/bin/git
 GZIP=/bin/gzip
 MKDIR=/bin/mkdir
 RM=/bin/rm
@@ -75,6 +77,10 @@ build/skilledwaffle-${VERSION}.tar : build/skilledwaffle-${VERSION}
 build/skilledwaffle-${VERSION} : build/skilledwaffle-${VERSION}/skilledwaffle
 	${MKDIR} --parents $@
 
-build/skilledwaffle-${VERSION}/skilledwaffle : skilledwaffle
+build/skilledwaffle-${VERSION}/skilledwaffle : script test
 	${MKDIR} --parents ${@D}
+	./test
 	${CP} $< $@
+
+build/version :
+	${GIT} describe --abbrev=4 HEAD
